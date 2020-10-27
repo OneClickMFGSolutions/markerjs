@@ -4,8 +4,8 @@ import { MarkerBase } from "./MarkerBase";
 import { ResizeGrip } from "./ResizeGrip";
 
 export class LineMarkerBase extends MarkerBase {
-    public static createMarker = (): LineMarkerBase => {
-        const marker = new LineMarkerBase();
+    public static createMarker = (color?: string): LineMarkerBase => {
+        const marker = new LineMarkerBase(color);
         marker.setup();
         return marker;
     }
@@ -74,8 +74,9 @@ export class LineMarkerBase extends MarkerBase {
             [["stroke", "transparent"], ["stroke-width", "30"]]);
         this.addToRenderVisual(this.markerBgLine);
         this.markerLine = SvgHelper.createLine(0, 0, this.x2, 0);
-        this.addToRenderVisual(this.markerLine);
+        this.markerLine.style.setProperty("stroke", this.color);
 
+        this.addToRenderVisual(this.markerLine);
         this.addControlBox();
     }
 
@@ -110,7 +111,9 @@ export class LineMarkerBase extends MarkerBase {
         this.markerBgLine.setAttribute("y2", this.y2.toString());
         this.markerLine.setAttribute("x2", this.x2.toString());
         this.markerLine.setAttribute("y2", this.y2.toString());
-}
+
+        this.markerLine.style.setProperty("stroke", this.color);
+    }
 
     private getLineLength = (x1: number, y1: number, x2: number, y2: number): number => {
         const dx = Math.abs(x1 - x2);

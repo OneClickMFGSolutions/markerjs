@@ -4,4 +4,5 @@ export interface MarkerBaseState {
   height: number;
   translateX: number;
   translateY: number;
+  color: string;
 }

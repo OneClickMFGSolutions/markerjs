@@ -2,15 +2,13 @@
   "name": "markerjs",
   "version": "1.8.1",
   "description": "Annotate and mark images",
-  "main": "markerjs.umd.js",
-  "module": "markerjs.esm.js",
-  "types": "typings/index.d.ts",
+  "main": "./dist/markerjs.umd.js",
+  "module": "./dist/markerjs.esm.js",
+  "types": "./dist/typings/index.d.ts",
   "scripts": {
     "test": "mocha --require ts-node/register test/**/*.ts",
     "build": "rollup --config rollup.config.prod.js",
-    "dev": "rollup --config rollup.config.dev.js -w",
-    "prepublish": "npm run build",
-    "publish": "npm publish ./dist/"
+    "dev": "rollup --config rollup.config.dev.js -w"
   },
   "repository": {
     "type": "git",

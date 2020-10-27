@@ -1,19 +1,17 @@
 import { SvgHelper } from "../helpers/SvgHelper";
 import { RectangularMarkerBase } from "./RectangularMarkerBase";
-import { RectangularMarkerGrips } from "./RectangularMarkerGrips";
 
 export class RectMarkerBase extends RectangularMarkerBase {
-    public static createMarker = (): RectMarkerBase => {
-        const marker = new RectMarkerBase();
+    public static createMarker = (color?: string): RectMarkerBase => {
+        const marker = new RectMarkerBase(color);
         marker.setup();
         return marker;
     }
 
-    private markerRect: SVGRectElement;
+    protected markerRect: SVGRectElement;
 
     protected setup() {
         super.setup();
-
         this.markerRect = SvgHelper.createRect(this.width, this.height);
         this.addToRenderVisual(this.markerRect);
     }

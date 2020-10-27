@@ -6,14 +6,14 @@ import CancelIcon from "./times.svg";
 import { TextMarkerState } from './TextMarkerState';
 
 export class TextMarker extends RectangularMarkerBase {
-    public static createMarker = (): TextMarker => {
-        const marker = new TextMarker();
+    public static createMarker = (color?: string): TextMarker => {
+        const marker = new TextMarker(color);
         marker.setup();
         return marker;
     }
 
-    constructor() {
-        super();
+    constructor(color?: string) {
+        super(color);
         this.markerTypeName = 'TextMarker';
     }
 
@@ -30,8 +30,8 @@ export class TextMarker extends RectangularMarkerBase {
     private editorTextArea: HTMLTextAreaElement;
 
     public getState(): TextMarkerState {
-        const state: TextMarkerState = Object.assign( 
-            { text: this.text }, super.getState()); 
+        const state: TextMarkerState = Object.assign(
+            { text: this.text }, super.getState());
         return state;
     }
 
@@ -76,6 +76,8 @@ export class TextMarker extends RectangularMarkerBase {
             }
             this.textElement.appendChild(SvgHelper.createTSpan(line, [["x", "0"], ["dy", LINE_SIZE]]));
         }
+
+        this.textElement.style.setProperty("fill", this.color);
 
         setTimeout(this.sizeText, 10);
     }
@@ -123,23 +125,16 @@ export class TextMarker extends RectangularMarkerBase {
         this.editorTextArea.addEventListener("keydown", this.onEditorKeyDown);
         this.editor.appendChild(this.editorTextArea);
 
+        const { x, y, width, height } = this.visual.getBoundingClientRect();
+        this.editor.style.setProperty("left", x + "px");
+        this.editor.style.setProperty("top", y + "px");
+        this.editor.style.setProperty("width", width + "px");
+        this.editor.style.setProperty("height", height + "px");
+
         document.body.appendChild(this.editor);
 
-        const buttons = document.createElement("div");
-        buttons.className = "markerjs-text-editor-button-bar";
-        this.editor.appendChild(buttons);
-
-        const okButton = document.createElement("div");
-        okButton.className = "markerjs-text-editor-button";
-        okButton.innerHTML = OkIcon;
-        okButton.addEventListener("click", this.onEditorOkClick);
-        buttons.appendChild(okButton);
-
-        const cancelButton = document.createElement("div");
-        cancelButton.className = "markerjs-text-editor-button";
-        cancelButton.innerHTML = CancelIcon;
-        cancelButton.addEventListener("click", this.closeEditor);
-        buttons.appendChild(cancelButton);
+        this.editorTextArea.addEventListener("blur", this.onEditorOkClick);
+        this.editorTextArea.focus();
     }
 
     private onEditorOkClick = (ev: MouseEvent) => {

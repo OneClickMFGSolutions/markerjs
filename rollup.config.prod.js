@@ -8,9 +8,9 @@ commoncfg[0].plugins.push(
     terser(),
     copy({
         files: ['LICENSE', 'README.md'],
-        dest: 'dist'
+        dest: './'
     }),
-    );
+);
 // workaround for terser plugin bug with multiple outputs
 // https://github.com/TrySound/rollup-plugin-terser/issues/5
 commoncfg[0].output.pop();

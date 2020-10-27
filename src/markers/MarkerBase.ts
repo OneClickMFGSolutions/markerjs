@@ -2,8 +2,8 @@ import { SvgHelper } from "../helpers/SvgHelper";
 import { MarkerBaseState } from "./MarkerBaseState";
 
 export class MarkerBase {
-    public static createMarker = (): MarkerBase => {
-        const marker = new MarkerBase();
+    public static createMarker = (color?: string): MarkerBase => {
+        const marker = new MarkerBase(color);
         marker.setup();
         return marker;
     }
@@ -30,8 +30,11 @@ export class MarkerBase {
 
     private isDragging: boolean = false;
 
-    // constructor() {
-    // }
+    public color: string = "#000000";
+
+    constructor(color?: string) {
+        if (color) this.color = color;
+    }
 
     public manipulate = (ev: MouseEvent) => {
         let scale: number;
@@ -88,6 +91,7 @@ export class MarkerBase {
             height: this.height,
             translateX: this.visual.transform.baseVal.getItem(0).matrix.e,
             translateY: this.visual.transform.baseVal.getItem(0).matrix.f,
+            color: this.color
         };
 
         return config;
@@ -103,6 +107,8 @@ export class MarkerBase {
         translate.matrix.e = state.translateX;
         translate.matrix.f = state.translateY;
         this.visual.transform.baseVal.replaceItem(translate, 0);
+
+        this.color = state.color;
     }
 
     protected setup() {
@@ -140,15 +146,15 @@ export class MarkerBase {
         let type = null;
 
         switch (ev.type) {
-          case "touchstart":
-            type = "mousedown";
-            break;
-          case "touchmove":
-            type = "mousemove";
-            break;
-          case "touchend":
-            type = "mouseup";
-            break;
+            case "touchstart":
+                type = "mousedown";
+                break;
+            case "touchmove":
+                type = "mousemove";
+                break;
+            case "touchend":
+                type = "mouseup";
+                break;
         }
 
         newEvt.initMouseEvent(type, true, true, window, 0,

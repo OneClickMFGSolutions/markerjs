@@ -1,4 +1,3 @@
-export { Activator } from "./Activator";
 export { MarkerArea } from "./MarkerArea";
 
 export { ArrowMarker } from "./markers/arrow/ArrowMarker";

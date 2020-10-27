@@ -7,17 +7,17 @@ import staticSite from 'rollup-plugin-static-site';
 commoncfg[0].plugins.push(
     staticSite({
         template: { path: 'src/dev-assets/template.html' },
-        dir: 'dist'
+        dir: '.'
     }),
     copy({
         files: ['src/dev-assets/*.jpg'],
-        dest: 'dist'
+        dest: '.'
     }),
-    serve('dist'),
+    serve('.'),
     livereload()
 );
 // only generate UMD during dev
-commoncfg[0].output.splice(0, 1);
+// commoncfg[0].output.splice(0, 1);
 // workaround for terser plugin bug with multiple outputs
 // https://github.com/TrySound/rollup-plugin-terser/issues/5
 // don't need double inputs in dev

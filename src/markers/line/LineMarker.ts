@@ -2,14 +2,14 @@ import { SvgHelper } from "../../helpers/SvgHelper";
 import { LineMarkerBase } from "../LineMarkerBase";
 
 export class LineMarker extends LineMarkerBase {
-    public static createMarker = (): LineMarkerBase => {
-        const marker = new LineMarker();
+    public static createMarker = (color?: string): LineMarkerBase => {
+        const marker = new LineMarker(color);
         marker.setup();
         return marker;
     }
 
-    constructor() {
-        super();
+    constructor(color?: string) {
+        super(color);
         this.markerTypeName = 'LineMarker';
     }
 

@@ -1,116 +1,117 @@
 .markerjs-logo {
-    display: inline-block;
-    margin: 0px;
-    padding: 0px;
+  display: inline-block;
+  margin: 0px;
+  padding: 0px;
 
-    fill: #333333;
+  fill: #333333;
 }
 
 .markerjs-logo a {
-    display: grid;
-    align-items: center;
-    justify-items: center;
-    padding: 3px;
-    width: 20px;
-    height: 20px;
+  display: grid;
+  align-items: center;
+  justify-items: center;
+  padding: 3px;
+  width: 20px;
+  height: 20px;
 }
 
 .markerjs-logo a:hover {
-    fill: #ff8080;
+  fill: #ff8080;
 }
 
 .markerjs-toolbar {
-    background-color: #cccccc;
-    padding: 0px 5px;
-    margin: 0px;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
+  background-color: #cccccc;
+  padding: 0px 5px;
+  margin: 0px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
 
-    display: grid;
-    grid-template-columns: repeat(20, auto);
+  display: grid;
+  grid-template-columns: repeat(20, auto);
 }
 
+.markerjs-toolbar-button,
+.markerjs-toolbar-logo a {
+  display: inline-block;
+  margin: 2px;
+  padding: 3px;
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  border-radius: 2px;
+  border-bottom: transparent solid 1px;
+  border-right: transparent solid 1px;
 
-.markerjs-toolbar-button, .markerjs-toolbar-logo a {
-    display: inline-block;
-    margin: 2px;
-    padding: 3px;
-    cursor: pointer;
-    width: 20px;
-    height: 20px;
-    border-radius: 2px;
-    border-bottom: transparent solid 1px;
-    border-right: transparent solid 1px;
+  fill: #333333;
 
-
-    fill: #333333;
-
-    display: grid;
-    align-items: center;
-    justify-items: center;
+  display: grid;
+  align-items: center;
+  justify-items: center;
 }
 
 .markerjs-toolbar-separator {
-    margin: 5px 5px;
-    border: 1px solid #dddddd;
+  margin: 5px 5px;
+  border: 1px solid #dddddd;
 }
 
-.markerjs-toolbar-button:hover, .markerjs-toolbar-logo a:hover {
-    background-color: #eeeeee;
-    background: radial-gradient(#eeeeee, #cccccc);
+.markerjs-toolbar-button:hover,
+.markerjs-toolbar-logo a:hover {
+  background-color: #eeeeee;
+  background: radial-gradient(#eeeeee, #cccccc);
 
-    fill: #ff8080;
+  fill: #ff8080;
 }
 
 .markerjs-toolbar-button svg {
-    height: 16px;
+  height: 16px;
 }
 
 .markerjs-text-editor {
-    position: fixed;
-    z-index: 20000;
-    left: 0px;
-    top: 0px;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(0,0,0,0.9);
+  position: absolute;
+  z-index: 20000;
+  left: 0px;
+  top: 0px;
+  /* width: 100vw;
+    height: 100vh; */
+  /* background-color: rgba(0, 0, 0, 0.9); */
 
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .markerjs-text-editor textarea {
-    width: 50%;
-    min-width: 50px;
-    max-width: 500px;
-    height: 50%;
-    min-height: 50px;
-    max-height: 500px;
+  width: 100%;
+  /* min-width: 50px;
+  max-width: 500px; */
+  height: 100%;
+  resize: none;
+  /* min-height: 50px;
+  max-height: 500px; */
 }
 
 .markerjs-text-editor .markerjs-text-editor-button-bar {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
-    width: 50%;
-    min-width: 50px;
-    max-width: 500px;
-    padding-top: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  width: 50%;
+  min-width: 50px;
+  max-width: 500px;
+  padding-top: 10px;
 }
 .markerjs-text-editor .markerjs-text-editor-button {
-    display: grid;
-    align-items: center;
-    padding: 0px;
-    margin-left: 15px;
-    width: 20px;
-    height: 20px;
+  display: grid;
+  align-items: center;
+  padding: 0px;
+  margin-left: 15px;
+  width: 20px;
+  height: 20px;
 
-    cursor: pointer;
+  cursor: pointer;
 
-    fill: #888888;
+  fill: #888888;
 }
 .markerjs-text-editor .markerjs-text-editor-button:hover {
-    fill: #ff8080;
+  fill: #ff8080;
 }

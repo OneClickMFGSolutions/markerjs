@@ -5,7 +5,7 @@ import postcss from 'rollup-plugin-postcss';
 import svgo from 'rollup-plugin-svgo';
 import generatePackageJson from 'rollup-plugin-generate-package-json'
 
-const outputDir = "./dist/";
+const outputDir = "./";
 
 let leanPkg = Object.assign({}, pkg);
 leanPkg.scripts = {};
@@ -63,9 +63,9 @@ export default [
                 baseContents: leanPkg
             })],
         output: [
-            { 
-                file: outputDir + pkg.main, 
-                name: pkg.name, 
+            {
+                file: outputDir + pkg.main,
+                name: pkg.name,
                 format: 'umd',
                 banner: banner
             },
