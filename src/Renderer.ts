@@ -1,10 +1,10 @@
 export class Renderer {
     public rasterize(
-        target: HTMLImageElement, 
-        markerImage: SVGSVGElement, 
-        done: (dataUrl: string) => void, 
-        naturalSize?: boolean, 
-        imageType?: string, 
+        target: HTMLImageElement,
+        markerImage: SVGSVGElement,
+        done: (dataUrl: string) => void,
+        naturalSize?: boolean,
+        imageType?: string,
         imageQuality?: number,
         markersOnly?: boolean
     ) {
@@ -22,7 +22,7 @@ export class Renderer {
         const data = markerImage.outerHTML;
 
         const ctx = canvas.getContext("2d");
-        if (markersOnly !== true) { 
+        if (markersOnly !== true) {
             ctx.drawImage(target, 0, 0, canvas.width, canvas.height);
         }
 

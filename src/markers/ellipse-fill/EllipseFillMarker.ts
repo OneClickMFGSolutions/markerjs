@@ -2,16 +2,16 @@ import { SvgHelper } from "../../helpers/SvgHelper";
 import { MarkerBaseState } from "../MarkerBaseState";
 import { RectangularMarkerBase } from "../RectangularMarkerBase";
 
-export class EllipseMarker extends RectangularMarkerBase {
+export class EllipseFillMarker extends RectangularMarkerBase {
     public static createMarker = (color?: string): RectangularMarkerBase => {
-        const marker = new EllipseMarker(color);
+        const marker = new EllipseFillMarker(color);
         marker.setup();
         return marker;
     }
 
     constructor(color?: string) {
         super(color);
-        this.markerTypeName = 'EllipseMarker';
+        this.markerTypeName = 'EllipseFillMarker';
     }
 
     private markerEllipse: SVGEllipseElement;
@@ -23,8 +23,8 @@ export class EllipseMarker extends RectangularMarkerBase {
         this.markerEllipse = SvgHelper.createEllipse(this.width, this.height);
         this.addToRenderVisual(this.markerEllipse);
 
-        this.markerEllipse.style.setProperty("fill", "transparent");
-        this.markerEllipse.style.setProperty("stroke", this.color);
+        this.markerEllipse.style.setProperty("stroke", "");
+        this.markerEllipse.style.setProperty("fill", this.color);
 
         SvgHelper.setAttributes(this.visual, [["class", "ellipse-marker"]]);
     }
@@ -39,7 +39,7 @@ export class EllipseMarker extends RectangularMarkerBase {
 
     public restoreState(state: MarkerBaseState) {
         super.restoreState(state);
-        this.markerEllipse.style.setProperty("stroke", this.color);
+        this.markerEllipse.style.setProperty("fill", this.color);
     }
 
 }

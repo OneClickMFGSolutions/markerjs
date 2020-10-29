@@ -29,14 +29,31 @@ export class TextMarker extends RectangularMarkerBase {
 
     private editorTextArea: HTMLTextAreaElement;
 
+    private shadowX: number = 0;
+    private shadowY: number = 0;
+    private shadowBlur: number = 0;
+    private shadowColor: string = "#000000";
+
     public getState(): TextMarkerState {
         const state: TextMarkerState = Object.assign(
-            { text: this.text }, super.getState());
+            {
+                text: this.text,
+                shadowX: this.shadowX,
+                shadowY: this.shadowY,
+                shadowBlur: this.shadowBlur,
+                shadowColor: this.shadowColor,
+            }, super.getState());
         return state;
     }
 
     public restoreState(state: TextMarkerState) {
         this.text = state.text;
+
+        this.shadowX = state.shadowX;
+        this.shadowY = state.shadowY;
+        this.shadowBlur = state.shadowBlur;
+        this.shadowColor = state.shadowColor;
+
         super.restoreState(state);
         this.renderText();
     }
@@ -63,7 +80,7 @@ export class TextMarker extends RectangularMarkerBase {
     }
 
     private renderText = () => {
-        const LINE_SIZE = "1.2em";
+        const LINE_SIZE = "20px";
 
         while (this.textElement.lastChild) {
             this.textElement.removeChild(this.textElement.lastChild);
@@ -78,6 +95,10 @@ export class TextMarker extends RectangularMarkerBase {
         }
 
         this.textElement.style.setProperty("fill", this.color);
+        this.textElement.style.setProperty("font-size", LINE_SIZE);
+
+        const { shadowX, shadowY, shadowBlur, shadowColor } = this.getState()
+        this.textElement.style.textShadow = `${shadowX}px ${shadowY}px ${shadowBlur}px ${shadowColor}`;
 
         setTimeout(this.sizeText, 10);
     }

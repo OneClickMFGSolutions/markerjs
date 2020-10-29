@@ -12,7 +12,7 @@ export class RectMarkerBase extends RectangularMarkerBase {
 
     protected setup() {
         super.setup();
-        this.markerRect = SvgHelper.createRect(this.width, this.height);
+        this.markerRect = SvgHelper.createRect(this.width, this.height, [["rx", "10px"]]);
         this.addToRenderVisual(this.markerRect);
     }
 

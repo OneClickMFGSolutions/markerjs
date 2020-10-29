@@ -95,7 +95,7 @@ export class SvgHelper {
     public static setAttributes = (el: SVGElement, attributes: Array<[string, string]>) => {
         for (const [attr, value] of attributes) {
             el.setAttribute(attr, value);
-         }
+        }
     }
 
     public static createTransform = (): SVGTransform => {
@@ -111,9 +111,9 @@ export class SvgHelper {
     }
 
     public static createMarker = (id: string, orient: string,
-                                  markerWidth: number | string, markerHeight: number | string,
-                                  refX: number | string, refY: number | string,
-                                  markerElement: SVGGraphicsElement): SVGMarkerElement => {
+        markerWidth: number | string, markerHeight: number | string,
+        refX: number | string, refY: number | string,
+        markerElement: SVGGraphicsElement): SVGMarkerElement => {
 
         const marker = document.createElementNS("http://www.w3.org/2000/svg", "marker");
         SvgHelper.setAttributes(marker, [

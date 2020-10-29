@@ -7,7 +7,6 @@ import { MarkerBase } from "./markers/MarkerBase";
 
 import { ArrowMarkerToolbarItem } from "./markers/arrow/ArrowMarkerToolbarItem";
 import { CoverMarkerToolbarItem } from "./markers/cover/CoverMarkerToolbarItem";
-import { HighlightMarkerToolbarItem } from "./markers/highlight/HighlightMarkerToolbarItem";
 import { LineMarkerToolbarItem } from "./markers/line/LineMarkerToolbarItem";
 import { RectMarkerToolbarItem } from "./markers/rect/RectMarkerToolbarItem";
 import { TextMarkerToolbarItem } from "./markers/text/TextMarkerToolbarItem";
@@ -15,11 +14,10 @@ import { TextMarkerToolbarItem } from "./markers/text/TextMarkerToolbarItem";
 import OkIcon from "./assets/core-toolbar-icons/check.svg";
 import DeleteIcon from "./assets/core-toolbar-icons/eraser.svg";
 import PointerIcon from "./assets/core-toolbar-icons/mouse-pointer.svg";
-import CloseIcon from "./assets/core-toolbar-icons/times.svg";
 
-import Logo from "./assets/markerjs-logo-m.svg";
 import Config, { MarkerColors } from './Config';
 import { EllipseMarkerToolbarItem } from './markers/ellipse/EllipseMarkerToolbarItem';
+import { EllipseFillMarkerToolbarItem } from './markers/ellipse-fill/EllipseFillMarkerToolbarItem';
 import { MarkerAreaState } from './MarkerAreaState';
 import { MarkerBaseState } from './markers/MarkerBaseState';
 import { RectMarker } from './markers/rect/RectMarker';
@@ -29,6 +27,8 @@ import { HighlightMarker } from './markers/highlight/HighlightMarker';
 import { TextMarker } from './markers/text/TextMarker';
 import { LineMarker } from './markers/line/LineMarker';
 import { ArrowMarker } from './markers/arrow/ArrowMarker';
+import { EllipseFillMarker } from "./markers/ellipse-fill/EllipseFillMarker";
+import { TextMarkerState } from "./markers/text/TextMarkerState";
 
 export class MarkerArea {
   private target: HTMLImageElement;
@@ -62,6 +62,8 @@ export class MarkerArea {
   private completeCallback: (dataUrl: string, state?: MarkerAreaState) => void;
   private cancelCallback: () => void;
 
+  private cancelTextShadowCallback: (ev: MouseEvent) => void = () => { }
+
   private color = "#000000"
   private get toolbars(): ToolbarItem[] {
     const toolbars = [
@@ -79,10 +81,11 @@ export class MarkerArea {
         name: "separator",
         tooltipText: "",
       },
-      new RectMarkerToolbarItem(),
       new EllipseMarkerToolbarItem(),
+      new EllipseFillMarkerToolbarItem(),
+      new RectMarkerToolbarItem(),
       new CoverMarkerToolbarItem(),
-      new HighlightMarkerToolbarItem(),
+      // new HighlightMarkerToolbarItem(),
       new LineMarkerToolbarItem(),
       new ArrowMarkerToolbarItem(),
       new TextMarkerToolbarItem(),
@@ -95,22 +98,37 @@ export class MarkerArea {
         name: "ok",
         tooltipText: "OK",
       },
-      {
-        icon: CloseIcon,
-        name: "close",
-        tooltipText: "Close",
-      },
+      // {
+      //   icon: CloseIcon,
+      //   name: "close",
+      //   tooltipText: "Close",
+      // },
     ];
 
-    toolbars.unshift({
-      icon: `
-        <svg width="15" height="15" >
+    toolbars.unshift(
+      {
+        name: "separator",
+        tooltipText: "",
+      }
+    )
+
+    if (this.activeMarker && this.activeMarker.markerTypeName == "TextMarker") {
+      toolbars.unshift({
+        icon: `<text x="3px" y="10px" style="text-shadow: 0 5px 5px black; fill:black;">A</text>`,
+        name: "shadow",
+        tooltipText: "Text Shadow"
+      })
+    }
+
+    toolbars.unshift(
+      {
+        icon: `<svg width="15" height="15" >
           <rect width="15" height="15" style="fill:${this.color};" />
-        </svg>
-      `,
-      name: "color",
-      tooltipText: "Color",
-    })
+        </svg>`,
+        name: "color",
+        tooltipText: "Color"
+      },
+    )
 
     return toolbars;
   }
@@ -177,6 +195,10 @@ export class MarkerArea {
           }
           case 'EllipseMarker': {
             this.addMarker(EllipseMarker, markerState);
+            break;
+          }
+          case 'EllipseFillMarker': {
+            this.addMarker(EllipseFillMarker, markerState);
             break;
           }
           case 'CoverMarker': {
@@ -299,6 +321,128 @@ export class MarkerArea {
     }
   }
 
+  public setTextShadow = (event: MouseEvent) => {
+    const m = this.activeMarker;
+    if (!m || m.markerTypeName != "TextMarker") return;
+
+    const dialog = document.createElement("div");
+    dialog.classList.add("md-card");
+    dialog.classList.add("mdt-bg");
+
+    dialog.style.position = "fixed";
+    dialog.style.top = event.clientY + "px";
+    dialog.style.left = event.clientX + "px";
+
+    const input = document.createElement("input")
+    input.classList.add("md-input")
+    input.classList.add("md-input-filled")
+    input.style.marginBottom = "1em"
+    input.style.flex = "1"
+    input.type = "number";
+
+    const offsetX = input.cloneNode() as HTMLInputElement
+    const offsetY = input.cloneNode() as HTMLInputElement
+    const blurRad = input.cloneNode() as HTMLInputElement
+
+    const color = document.createElement("input")
+    color.type = "color";
+    color.style.flex = "1"
+
+    const field = document.createElement("span")
+    field.style.display = "flex"
+    field.style.alignItems = "center"
+    field.style.justifyContent = "space-between"
+
+    const label = document.createElement("div")
+    label.style.marginRight = "1em"
+    label.style.width = "20ch"
+    // label.style.fontSize = "1.25em"
+
+    const XField = field.cloneNode()
+    const XLabel = label.cloneNode() as HTMLDivElement;
+    XLabel.innerText = "Shadow's X Position";
+    XField.appendChild(XLabel)
+    XField.appendChild(offsetX)
+
+    const YField = field.cloneNode()
+    const YLabel = label.cloneNode() as HTMLDivElement;
+    YLabel.innerText = "Shadow's Y Position";
+    YField.appendChild(YLabel)
+    YField.appendChild(offsetY)
+
+    const BField = field.cloneNode()
+    const BLabel = label.cloneNode() as HTMLDivElement;
+    BLabel.innerText = "Shadow's Blur Radius";
+    BField.appendChild(BLabel)
+    BField.appendChild(blurRad)
+
+    const CField = field.cloneNode()
+    const CLabel = label.cloneNode() as HTMLDivElement;
+    CLabel.innerText = "Shadow's Color";
+    CField.appendChild(CLabel)
+    CField.appendChild(color)
+
+    dialog.appendChild(XField)
+    dialog.appendChild(YField)
+    dialog.appendChild(BField)
+    dialog.appendChild(CField)
+
+    document.body.appendChild(dialog);
+
+    this.cancelTextShadowCallback = (e: MouseEvent) => {
+      if (e.target == event.target) return;
+
+      if (!dialog.contains(e.target as Node)) {
+        document.body.removeChild(dialog)
+        window.removeEventListener("click", this.cancelTextShadowCallback)
+      }
+    }
+
+    window.addEventListener("click", this.cancelTextShadowCallback)
+
+    const inputHandler = () => {
+      const state = m.getState() as TextMarkerState;
+      state.shadowX = Number(offsetX.value || 0);
+      state.shadowY = Number(offsetY.value || 0);
+      state.shadowBlur = Number(blurRad.value || 0);
+      state.shadowColor = color.value || "#000000";
+      console.log("Got some input", state, m)
+      m.restoreState(state);
+    }
+
+    const state = m.getState() as TextMarkerState;
+    if (state.shadowX) offsetX.value = String(state.shadowX)
+    if (state.shadowY) offsetY.value = String(state.shadowY)
+    if (state.shadowBlur) blurRad.value = String(state.shadowBlur)
+    if (state.color) color.value = String(state.color)
+
+    offsetX.addEventListener("input", inputHandler)
+    offsetY.addEventListener("input", inputHandler)
+    blurRad.addEventListener("input", inputHandler)
+    color.addEventListener("input", inputHandler)
+
+    // setTimeout(() => input.click(), 50)
+
+    // input.oninput = (e) => {
+    //   const newColor = input.value;
+
+    //   if (this.activeMarker) {
+    //     const state = this.activeMarker.getState();
+    //     state.color = newColor;
+    //     this.activeMarker.restoreState(state);
+    //   }
+
+    //   this.color = newColor;
+    //   this.showUI();
+    // }
+
+    // input.onblur = (e) => {
+    //   document.body.removeChild(input);
+    //   input.oninput = null;
+    //   input.onblur = null;
+    // }
+  }
+
   public getState = (): MarkerAreaState => {
     let config = new MarkerAreaState(this.markers);
     return config;
@@ -331,6 +475,7 @@ export class MarkerArea {
     if (this.activeMarker && (ev.buttons & 1) > 0) {
       this.activeMarker.deselect();
       this.activeMarker = null;
+      this.showUI()
     }
   }
 
@@ -457,18 +602,13 @@ export class MarkerArea {
             }
             .arrow-marker-tip {
                 stroke-width: 0;
-                fill: ${this.markerColors.mainColor};
             }
             .text-marker text {
                 fill: ${this.markerColors.mainColor};
-                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
-                    Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji",
-                    "Segoe UI Emoji", "Segoe UI Symbol";
+                font-family: sans-serif;
             }
             .ellipse-marker .render-visual {
-                stroke: ${this.markerColors.mainColor};
                 stroke-width: ${this.strokeWidth};
-                fill: transparent;
             }
             .markerjs-rect-control-box .markerjs-rect-control-rect {
                 stroke: black;
@@ -497,6 +637,10 @@ export class MarkerArea {
           this.setActiveMarkerColor(ev);
           break;
         }
+        case "shadow": {
+          this.setTextShadow(ev);
+          break;
+        }
         case "delete": {
           this.deleteActiveMarker();
           break;
@@ -519,13 +663,16 @@ export class MarkerArea {
     }
   }
 
-  private selectMarker = (marker: MarkerBase) => {
+  private selectMarker = (marker: MarkerBase | null) => {
     if (this.activeMarker && this.activeMarker !== marker) {
       this.activeMarker.deselect();
     }
+
     this.activeMarker = marker;
 
-    this.color = marker.color || "#000000"
+    if (marker) {
+      this.color = marker.color || "#000000"
+    }
     this.showUI();
   }
 
@@ -565,31 +712,4 @@ export class MarkerArea {
         - this.logoUI.clientHeight - 10}px`;
     }
   }
-
-  /**
-   * NOTE: 
-   * 
-   * before removing or modifying this method please consider supporting marker.js
-   * by visiting https://markerjs.com/#price for details
-   * 
-   * thank you!
-   */
-  private addLogo = () => {
-    this.logoUI = document.createElement("div");
-    this.logoUI.className = "markerjs-logo";
-
-    const link = document.createElement("a");
-    link.href = "https://markerjs.com/";
-    link.target = "_blank";
-    link.innerHTML = Logo;
-    link.title = "Powered by marker.js";
-
-    this.logoUI.appendChild(link);
-
-    this.targetRoot.appendChild(this.logoUI);
-
-    this.logoUI.style.position = "absolute";
-    this.positionLogo();
-  }
-
 }
